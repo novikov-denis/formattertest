@@ -197,7 +197,7 @@
           <textarea id="test-text-input" name="test-text" placeholder="Вставьте текст ответов"></textarea>
           <button type="submit">Форматировать</button>
         </form>
-        <div class="result-container">
+        <div id="result-container" class="hidden">
           <div class="result-header">
             <p>Здесь будет результат:</p>
             <button id="test-copy-button">Скопировать результат</button>
@@ -208,7 +208,7 @@
     </div>
   </main>
   <footer>
-    <p>Автор – <a href="https://t.me/novikovdenis" target="_blank">@novikovdenis</a> 🧡 для Практикума с любовью</p>
+    <p>Автор – <a href="https://t.me/novikovdenis" target="_blank">@novikovденис</a> 🧡 для Практикума с любовью</p>
   </footer>
   <div class="notification" id="notification">Результат скопирован в буфер обмена</div>
   <div class="welcome-notification" id="welcome-notification">
@@ -217,6 +217,7 @@
     <p>Что нового?</p>
     <p>- Умею определять диалоги для курсов математики (Персонажи: Ульяна и Макс)</p>
     <p>- Научился определять iframe и теперь могу заменить его в тексте</p>
+    <p>- Форматирую блок Маркер Проблемы для одиночного и множественного выбора</p>
     <br>
     <p>Дальше больше 🙂</p>
   </div>
@@ -241,6 +242,7 @@
     const problemForm = document.getElementById('problem-form');
     const testResult = document.getElementById('test-result');
     const testCopyButton = document.getElementById('test-copy-button');
+    const resultContainer = document.getElementById('result-container');
 
     let currentFormat = 'single'; // Default format
 
@@ -261,11 +263,13 @@
     singleChoiceButton.addEventListener('click', () => {
       currentFormat = 'single';
       problemForm.classList.remove('hidden');
+      resultContainer.classList.remove('hidden');
     });
 
     multipleChoiceButton.addEventListener('click', () => {
       currentFormat = 'multiple';
       problemForm.classList.remove('hidden');
+      resultContainer.classList.remove('hidden');
     });
 
     document.addEventListener('DOMContentLoaded', () => {
