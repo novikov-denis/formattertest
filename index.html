@@ -354,7 +354,7 @@
 
     function formatSingleChoiceText(text) {
       const lines = text.split('\n').map(line => line.trim()).filter(line => line);
-      const choices = lines.map(line => line.replace(/^[а-г]\)\s*/, ''));
+      const choices = lines.map(line => line.replace(/^[а-г]\)\s*/, '').replace(/^\d+\)\s*/, ''));
       const problemMarker = {
         content: {
           id: "44c296e3-eb80-4ae9-beb3-d8b997c37d51",
@@ -378,7 +378,7 @@
 
     function formatMultipleChoiceText(text) {
       const lines = text.split('\n').map(line => line.trim()).filter(line => line);
-      const choices = lines.map(line => line.replace(/^[а-г]\)\s*/, ''));
+      const choices = lines.map(line => line.replace(/^[а-г]\)\s*/, '').replace(/^\d+\)\s*/, ''));
       const problemMarker = {
         content: {
           id: "44c296e3-eb80-4ae9-beb3-d8b997c37d51",
