@@ -180,7 +180,11 @@
     <div id="tests-container" class="hidden">
       <button id="problem-marker-button">Маркер Проблемы</button>
       <div id="problem-marker-container" class="hidden">
-        <form id="problem-form">
+        <div class="button-container">
+          <button id="single-choice-button">Одиночный</button>
+          <button id="multiple-choice-button">Множественный</button>
+        </div>
+        <form id="problem-form" class="hidden">
           <label for="test-text-input">Введите текст ответов</label>
           <textarea id="test-text-input" name="test-text" placeholder="Вставьте текст ответов"></textarea>
           <button type="submit">Форматировать</button>
@@ -224,9 +228,13 @@
     const testsContainer = document.getElementById('tests-container');
     const problemMarkerButton = document.getElementById('problem-marker-button');
     const problemMarkerContainer = document.getElementById('problem-marker-container');
+    const singleChoiceButton = document.getElementById('single-choice-button');
+    const multipleChoiceButton = document.getElementById('multiple-choice-button');
     const problemForm = document.getElementById('problem-form');
     const testResult = document.getElementById('test-result');
     const testCopyButton = document.getElementById('test-copy-button');
+
+    let currentFormat = 'single'; // Default format
 
     mathButton.addEventListener('click', () => {
       mathContainer.classList.remove('hidden');
@@ -240,6 +248,16 @@
 
     problemMarkerButton.addEventListener('click', () => {
       problemMarkerContainer.classList.remove('hidden');
+    });
+
+    singleChoiceButton.addEventListener('click', () => {
+      currentFormat = 'single';
+      problemForm.classList.remove('hidden');
+    });
+
+    multipleChoiceButton.addEventListener('click', () => {
+      currentFormat = 'multiple';
+      problemForm.classList.remove('hidden');
     });
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -265,7 +283,7 @@
     problemForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const text = problemForm['test-text'].value;
-      const formattedText = formatProblemText(text);
+      const formattedText = currentFormat === 'single' ? formatSingleChoiceText(text) : formatMultipleChoiceText(text);
       testResult.textContent = formattedText;
     });
 
@@ -334,7 +352,7 @@
       return text.replace(/^(Макс|Ульяна):\s*(.+)$/gm, '').trim();
     }
 
-    function formatProblemText(text) {
+    function formatSingleChoiceText(text) {
       const lines = text.split('\n').map(line => line.trim()).filter(line => line);
       const choices = lines.map(line => line.replace(/^[а-г]\)\s*/, ''));
       const problemMarker = {
@@ -346,6 +364,30 @@
           type: "choice",
           options: {
             flavor: "radio",
+            choices: choices,
+            type_display: "vertical"
+          },
+          meta: {
+            correct_answers: [1]
+          }
+        },
+        type: "ProblemMarker"
+      };
+      return JSON.stringify(problemMarker, null, 2);
+    }
+
+    function formatMultipleChoiceText(text) {
+      const lines = text.split('\n').map(line => line.trim()).filter(line => line);
+      const choices = lines.map(line => line.replace(/^[а-г]\)\s*/, ''));
+      const problemMarker = {
+        content: {
+          id: "44c296e3-eb80-4ae9-beb3-d8b997c37d51",
+          misc: {
+            feedback: [null, null, null, null]
+          },
+          type: "choice",
+          options: {
+            flavor: "checkbox",
             choices: choices,
             type_display: "vertical"
           },
