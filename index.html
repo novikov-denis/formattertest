@@ -70,6 +70,7 @@
       border-radius: 5px;
       cursor: pointer;
       transition: background-color 0.3s;
+      display: inline-block;
     }
     button:hover {
       background-color: #124EA8;
@@ -144,6 +145,11 @@
       display: flex;
       gap: 10px;
       margin-bottom: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .button-container button {
+      margin: 5px;
     }
   </style>
 </head>
@@ -178,7 +184,9 @@
       </div>
     </div>
     <div id="tests-container" class="hidden">
-      <button id="problem-marker-button">Маркер Проблемы</button>
+      <div class="button-container">
+        <button id="problem-marker-button">Маркер Проблемы</button>
+      </div>
       <div id="problem-marker-container" class="hidden">
         <div class="button-container">
           <button id="single-choice-button">Одиночный</button>
