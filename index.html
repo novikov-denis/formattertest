@@ -137,6 +137,14 @@
       color: white;
       text-decoration: none;
     }
+    .hidden {
+      display: none;
+    }
+    .button-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
@@ -144,24 +152,51 @@
     <h1>Форматирование текста для платформы</h1>
   </header>
   <main>
-    <form>
-      <label for="text-input">Введите ваш текст</label>
-      <textarea id="text-input" name="text" placeholder="Вставьте текст с формулами или диалог"></textarea>
-      <button type="submit">Форматировать</button>
-    </form>
-    <div class="result-container">
-      <div class="result-header">
-        <p>Здесь будет результат:</p>
-        <button id="copy-button">Скопировать результат</button>
-      </div>
-      <pre class="result">Прямо тут</pre>
+    <div class="button-container">
+      <button id="mathematics-button">Матеша</button>
+      <button id="tests-button">Тесты</button>
     </div>
-    <div class="dialog-container" style="display: none;">
-      <div class="result-header">
-        <p>Форматированный диалог:</p>
-        <button id="copy-dialog-button">Скопировать диалог</button>
+    <div id="mathematics-container" class="hidden">
+      <form>
+        <label for="text-input">Введите ваш текст</label>
+        <textarea id="text-input" name="text" placeholder="Вставьте текст с формулами или диалог"></textarea>
+        <button type="submit">Форматировать</button>
+      </form>
+      <div class="result-container">
+        <div class="result-header">
+          <p>Здесь будет результат:</p>
+          <button id="copy-button">Скопировать результат</button>
+        </div>
+        <pre class="result">Прямо тут</pre>
       </div>
-      <pre class="dialog">Здесь будет форматированный диалог</pre>
+      <div class="dialog-container" style="display: none;">
+        <div class="result-header">
+          <p>Форматированный диалог:</p>
+          <button id="copy-dialog-button">Скопировать диалог</button>
+        </div>
+        <pre class="dialog">Здесь будет форматированный диалог</pre>
+      </div>
+    </div>
+    <div id="tests-container" class="hidden">
+      <form>
+        <label for="test-text-input">Введите ваш текст</label>
+        <textarea id="test-text-input" name="test-text" placeholder="Вставьте текст для тестов"></textarea>
+        <button type="submit">Форматировать</button>
+      </form>
+      <div class="result-container">
+        <div class="result-header">
+          <p>Здесь будет результат:</p>
+          <button id="test-copy-button">Скопировать результат</button>
+        </div>
+        <pre class="result">Прямо тут</pre>
+      </div>
+      <div class="dialog-container" style="display: none;">
+        <div class="result-header">
+          <p>Форматированный диалог:</p>
+          <button id="test-copy-dialog-button">Скопировать диалог</button>
+        </div>
+        <pre class="dialog">Здесь будет форматированный диалог</pre>
+      </div>
     </div>
   </main>
   <footer>
@@ -186,7 +221,22 @@
     const copyDialogButton = document.getElementById('copy-dialog-button');
     const notification = document.getElementById('notification');
     const welcomeNotification = document.getElementById('welcome-notification');
-    
+
+    const mathButton = document.getElementById('mathematics-button');
+    const testsButton = document.getElementById('tests-button');
+    const mathContainer = document.getElementById('mathematics-container');
+    const testsContainer = document.getElementById('tests-container');
+
+    mathButton.addEventListener('click', () => {
+      mathContainer.classList.remove('hidden');
+      testsContainer.classList.add('hidden');
+    });
+
+    testsButton.addEventListener('click', () => {
+      testsContainer.classList.remove('hidden');
+      mathContainer.classList.add('hidden');
+    });
+
     document.addEventListener('DOMContentLoaded', () => {
       showWelcomeNotification();
     });
