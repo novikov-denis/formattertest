@@ -157,7 +157,7 @@
       <button id="tests-button">Тесты</button>
     </div>
     <div id="mathematics-container" class="hidden">
-      <form>
+      <form id="math-form">
         <label for="text-input">Введите ваш текст</label>
         <textarea id="text-input" name="text" placeholder="Вставьте текст с формулами или диалог"></textarea>
         <button type="submit">Форматировать</button>
@@ -178,24 +178,20 @@
       </div>
     </div>
     <div id="tests-container" class="hidden">
-      <form>
-        <label for="test-text-input">Введите ваш текст</label>
-        <textarea id="test-text-input" name="test-text" placeholder="Вставьте текст для тестов"></textarea>
-        <button type="submit">Форматировать</button>
-      </form>
-      <div class="result-container">
-        <div class="result-header">
-          <p>Здесь будет результат:</p>
-          <button id="test-copy-button">Скопировать результат</button>
+      <button id="problem-marker-button">Маркер Проблемы</button>
+      <div id="problem-marker-container" class="hidden">
+        <form id="problem-form">
+          <label for="test-text-input">Введите текст ответов</label>
+          <textarea id="test-text-input" name="test-text" placeholder="Вставьте текст ответов"></textarea>
+          <button type="submit">Форматировать</button>
+        </form>
+        <div class="result-container">
+          <div class="result-header">
+            <p>Здесь будет результат:</p>
+            <button id="test-copy-button">Скопировать результат</button>
+          </div>
+          <pre class="result" id="test-result">Прямо тут</pre>
         </div>
-        <pre class="result">Прямо тут</pre>
-      </div>
-      <div class="dialog-container" style="display: none;">
-        <div class="result-header">
-          <p>Форматированный диалог:</p>
-          <button id="test-copy-dialog-button">Скопировать диалог</button>
-        </div>
-        <pre class="dialog">Здесь будет форматированный диалог</pre>
       </div>
     </div>
   </main>
@@ -213,7 +209,7 @@
     <p>Дальше больше 🙂</p>
   </div>
   <script>
-    const form = document.querySelector('form');
+    const mathForm = document.getElementById('math-form');
     const result = document.querySelector('.result');
     const dialogContainer = document.querySelector('.dialog-container');
     const dialogOutput = document.querySelector('.dialog');
@@ -226,6 +222,11 @@
     const testsButton = document.getElementById('tests-button');
     const mathContainer = document.getElementById('mathematics-container');
     const testsContainer = document.getElementById('tests-container');
+    const problemMarkerButton = document.getElementById('problem-marker-button');
+    const problemMarkerContainer = document.getElementById('problem-marker-container');
+    const problemForm = document.getElementById('problem-form');
+    const testResult = document.getElementById('test-result');
+    const testCopyButton = document.getElementById('test-copy-button');
 
     mathButton.addEventListener('click', () => {
       mathContainer.classList.remove('hidden');
@@ -237,13 +238,17 @@
       mathContainer.classList.add('hidden');
     });
 
+    problemMarkerButton.addEventListener('click', () => {
+      problemMarkerContainer.classList.remove('hidden');
+    });
+
     document.addEventListener('DOMContentLoaded', () => {
       showWelcomeNotification();
     });
 
-    form.addEventListener('submit', (e) => {
+    mathForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const text = form.text.value;
+      const text = mathForm.text.value;
       const formattedText = formatText(removeDialogLines(text));
       const formattedDialog = formatDialog(text);
       
@@ -255,6 +260,13 @@
       } else {
         dialogContainer.style.display = 'none';
       }
+    });
+
+    problemForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = problemForm['test-text'].value;
+      const formattedText = formatProblemText(text);
+      testResult.textContent = formattedText;
     });
 
     copyButton.addEventListener('click', () => {
@@ -270,6 +282,15 @@
       const text = dialogOutput.textContent;
       navigator.clipboard.writeText(text).then(() => {
         showNotification('Диалог скопирован в буфер обмена');
+      }, (err) => {
+        console.error('Ошибка при копировании: ', err);
+      });
+    });
+
+    testCopyButton.addEventListener('click', () => {
+      const text = testResult.textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        showNotification('Результат скопирован в буфер обмена');
       }, (err) => {
         console.error('Ошибка при копировании: ', err);
       });
@@ -311,6 +332,30 @@
 
     function removeDialogLines(text) {
       return text.replace(/^(Макс|Ульяна):\s*(.+)$/gm, '').trim();
+    }
+
+    function formatProblemText(text) {
+      const lines = text.split('\n').map(line => line.trim()).filter(line => line);
+      const choices = lines.map(line => line.replace(/^[а-г]\)\s*/, ''));
+      const problemMarker = {
+        content: {
+          id: "44c296e3-eb80-4ae9-beb3-d8b997c37d51",
+          misc: {
+            feedback: [null, null, null, null]
+          },
+          type: "choice",
+          options: {
+            flavor: "radio",
+            choices: choices,
+            type_display: "vertical"
+          },
+          meta: {
+            correct_answers: [1]
+          }
+        },
+        type: "ProblemMarker"
+      };
+      return JSON.stringify(problemMarker, null, 2);
     }
 
     function showNotification(message) {
